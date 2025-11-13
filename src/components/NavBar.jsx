@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Button from "../utilsDesign/Button";
 import useLinkClasses from "../customHooks/UseLinkClasses";
+import logo from "../assets/logo.jpeg";
 const NavBar = ({ token, handleLogout }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,22 +10,40 @@ const NavBar = ({ token, handleLogout }) => {
   const servicesClasses = useLinkClasses("/services");
   const contactClasses = useLinkClasses("/contact");
 
-
-
   return (
     <div>
       <nav className="bg-mainColor text-black px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center">
         {/* ---- Logo + Hamburger (mobile) ---- */}
         <div className="flex flex-row items-center justify-between w-full sm:w-auto">
-          <Link to={"/"}>
-            <div className="text-2xl text-[#baa769] font-bold font-alumni a">
-              Mashjid Al{" "}
-              <span className="text-3xl font-poppins font-normal text-white">
-                Falah
+          
+          <Link
+            to="/"
+            className="flex items-center gap-3 group transition-all duration-300 hover:gap-4"
+          >
+            {/* Logo */}
+            <img
+              src={logo}
+              alt="Zubayr Learning Center Logo"
+              className="w-12 h-12 rounded-full object-cover shadow-md border-2 border-[#baa769]/30 
+               group-hover:scale-110 group-hover:border-[#baa769] transition-all duration-300"
+            />
+
+            {/* Text */}
+            <div className="flex flex-col leading-tight">
+              <h1
+                className="text-2xl md:text-3xl font-bold font-alumni text-[#baa769] 
+                   group-hover:text-[#d4c89a] transition-colors duration-300"
+              >
+                Zubayr Learning
+              </h1>
+              <span
+                className="text-lg md:text-xl font-poppins font-medium text-white 
+                     tracking-wider -mt-1"
+              >
+                Center
               </span>
             </div>
           </Link>
-
           {/* Hamburger – visible only on mobile */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -141,7 +160,11 @@ const NavBar = ({ token, handleLogout }) => {
                 Logout
               </button>
             ) : (
-              <Link to="/login" onClick={() => setIsMenuOpen(false)} className="block">
+              <Link
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
+              >
                 <Button text={"Donate Us"} />
               </Link>
             )}

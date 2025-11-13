@@ -1,14 +1,54 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Clock, Sun, Moon, CloudSun, CloudMoon, Sunrise } from "lucide-react";
 import AnimatedHeading from "../animation/AnimatedHeading";
 import Divider from "../animation/Divider";
+import LogoLoader from "../animation/Loader";
+import ErrorPage from "../animation/Error";
+
+const islamicQuotes = [
+  {
+    text: "The best among you are those who have the best manners and character.",
+    author: "Prophet Muhammad (PBUH)",
+  },
+  {
+    text: "Do not waste water even if you were at a running stream.",
+    author: "Prophet Muhammad (PBUH)",
+  },
+  {
+    text: "Speak a good word or remain silent.",
+    author: "Prophet Muhammad (PBUH)",
+  },
+  {
+    text: "The strongest among you is the one who controls his anger.",
+    author: "Prophet Muhammad (PBUH)",
+  },
+  {
+    text: "Seek knowledge from the cradle to the grave.",
+    author: "Prophet Muhammad (PBUH)",
+  },
+  {
+    text: "A person’s tongue can give you the taste of his heart.",
+    author: "Ibn Qayyim Al-Jawziyyah",
+  },
+  {
+    text: "The heart is like a bird: love as its head and wisdom as its two wings.",
+    author: "Ibn Al-Qayyim",
+  },
+  {
+    text: "Patience is a pillar of faith.",
+    author: "Umar ibn Al-Khattab (RA)",
+  },
+];
 
 const WaqtTimings = () => {
   const [timings, setTimings] = useState(null);
   const [dataDate, setDataDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [quote, setQuote] = useState(islamicQuotes[0]);
 
+  /* ---------- Fetch timings ---------- */
   useEffect(() => {
     const fetchTimings = async () => {
       try {
@@ -19,27 +59,29 @@ const WaqtTimings = () => {
         setTimings(data.data.timings);
         setDataDate(data.data.date);
         setLoading(false);
-        // eslint-disable-next-line no-unused-vars
       } catch (err) {
         setError("Failed to load timings. Please try again.");
         setLoading(false);
       }
     };
-
     fetchTimings();
   }, []);
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-700 text-lg">
-        Loading prayer times...
-      </div>
-    );
+  /* ---------- Rotate quote ---------- */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * islamicQuotes.length);
+      setQuote(islamicQuotes[randomIndex]);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading) return <LogoLoader />;
 
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600 text-lg">
-        {error}
+        <ErrorPage message={error}/>
       </div>
     );
 
@@ -50,12 +92,7 @@ const WaqtTimings = () => {
       end: timings.Sunrise,
       icon: <CloudMoon />,
     },
-    {
-      name: "Sunrise",
-      start: timings.Sunrise,
-      end:"0000",
-      icon: <Sunrise />,
-    },
+    { name: "Sunrise", start: timings.Sunrise, end: "0000", icon: <Sunrise /> },
     { name: "Dhuhr", start: timings.Dhuhr, end: timings.Asr, icon: <Sun /> },
     {
       name: "Asr",
@@ -75,16 +112,12 @@ const WaqtTimings = () => {
       end: timings.Midnight || "23:59",
       icon: <Clock />,
     },
-    {
-      name: "jumuah",
-      start: "1.00 pm",
-      end: "2.00 pm",
-    },
+    { name: "jumuah", start: "1.00 pm", end: "2.00 pm" },
   ];
-  //   https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80
+
   return (
     <section className="min-h-screen font-alumni flex flex-col py-10 px-4 relative overflow-hidden">
-      {/* Optional: Subtle animated overlay for depth */}
+      {/* Subtle overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
       <div className="w-full max-w-7xl mx-auto space-y-10 z-10">
@@ -95,7 +128,6 @@ const WaqtTimings = () => {
 
             {/* Date Info Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm md:text-base">
-              {/* Gregorian */}
               <div className="bg-white/20 backdrop-blur-md rounded-2xl p-5 border border-white/30">
                 <p className="text-white/80 font-poppins font-medium text-lg">
                   Gregorian
@@ -105,8 +137,7 @@ const WaqtTimings = () => {
                 </p>
               </div>
 
-              {/* Hijri */}
-              <div className="bg-mainColor  to-yellow-600/20 backdrop-blur-xl rounded-2xl p-5 border  border-amber-400/50 shadow-amber-400/40">
+              <div className="bg-mainColor to-yellow-600/20 backdrop-blur-xl rounded-2xl p-5 border border-amber-400/50 shadow-amber-400/40">
                 <p className="text-white font-poppins font-medium text-lg">
                   Hijri
                 </p>
@@ -119,103 +150,117 @@ const WaqtTimings = () => {
               </div>
             </div>
 
-            {/* Decorative Line */}
             <div className="flex justify-center">
               <Divider />
             </div>
           </div>
         </div>
 
-        {/* Prayer Times Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-2 gap-6">
-          {waqtList.map((waqt) => {
-            const isJummah =
-              waqt.name.toLowerCase() === "Jumu'ah" ||
-              waqt.name.toLowerCase().includes("jumuah") ||
-              waqt.name.toLowerCase().includes("friday");
-            console.log(waqt.name, isJummah);
-            const isSunrise = waqt.name.toLowerCase() === "sunrise";
-            return (
-              <div
-                key={waqt.name}
-                className={`
-          ${
-            isJummah || isSunrise
-              ? " to-yellow-600/20 backdrop-blur-xl bg-mainColor  border-amber-400/50 shadow-amber-400/40"
-              : "bg-white/15 backdrop-blur-lg border-white/20 hover:bg-white/25"
-          }
-          rounded-2xl p-6 lg:p-8 border 
-          shadow-lg hover:shadow-2xl 
-          transition-all duration-500 transform hover:-translate-y-1
-        `}
-              >
-                {/* Special Jumua'h Badge
-        {isJummah && (
-           
-        )} */}
+        {/* ==== LEFT: Quote  |  RIGHT: Timings ==== */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Quote – full height left side */}
+          <div className="lg:col-span-1">
+            <div className="bg-gradient-to-br from-[#baa769]/20 to-amber-600/10 backdrop-blur-xl rounded-2xl p-6 border border-amber-400/40 shadow-lg shadow-amber-400/20 h-full flex flex-col justify-center">
+              <blockquote className="text-amber-100 italic text-lg leading-relaxed text-center mb-4">
+                {quote.text}
+              </blockquote>
+              <footer className="text-amber-200 text-sm font-medium text-center">
+                — {quote.author}
+              </footer>
+            </div>
+          </div>
 
-                <div
-                  className={`flex items-center gap-3 ${
-                    isJummah ? "mb-5 justify-center" : "mb-4"
-                  }`}
-                >
-                  <span
-                    className={`
-              text-2xl transition-transform duration-300
-              ${
-                isJummah
-                  ? "text-amber-400 drop-shadow-glow"
-                  : "text-emerald-400 group-hover:scale-110"
-              }
-            `}
-                  >
-                    {waqt.icon}
-                  </span>
-                  <h2
-                    className={`
-              font-bold
-              ${
-                isJummah
-                  ? "text-3xl text-amber-100 drop-shadow-lg"
-                  : "text-2xl text-white"
-              }
-            `}
-                  >
-                    {waqt.name}
-                  </h2>
-                </div>
+          {/* Timings – right side */}
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {waqtList.map((waqt) => {
+                const isJummah =
+                  waqt.name.toLowerCase() === "jumu'ah" ||
+                  waqt.name.toLowerCase().includes("jumuah") ||
+                  waqt.name.toLowerCase().includes("friday");
+                const isSunrise = waqt.name.toLowerCase() === "sunrise";
 
-                <div
-                  className={`space-y-2 ${
-                    isJummah ? "text-amber-100 text-center" : "text-white/90"
-                  }`}
-                >
-                  <p className="flex justify-between text-sm lg:text-base">
-                    <span
-                      className={`font-medium ${
-                        isJummah ? "text-amber-200" : "text-white/70"
+                return (
+                  <div
+                    key={waqt.name}
+                    className={`
+                      ${
+                        isJummah || isSunrise
+                          ? "to-yellow-600/20 backdrop-blur-xl bg-mainColor border-amber-400/50 shadow-amber-400/40"
+                          : "bg-white/15 backdrop-blur-lg border-white/20 hover:bg-white/25"
+                      }
+                      rounded-2xl p-6 lg:p-8 border shadow-lg hover:shadow-2xl
+                      transition-all duration-500 transform hover:-translate-y-1
+                    `}
+                  >
+                    <div
+                      className={`flex items-center gap-3 ${
+                        isJummah ? "mb-5 justify-center" : "mb-4"
                       }`}
                     >
-                      Start:
-                    </span>
-                    <span className="font-mono font-semibold">
-                      {waqt.start}
-                    </span>
-                  </p>
-                  <p className="flex justify-between text-sm lg:text-base">
-                    <span
-                      className={`font-medium ${
-                        isJummah ? "text-amber-200" : "text-white/70"
+                      <span
+                        className={`
+                          text-2xl transition-transform duration-300
+                          ${
+                            isJummah
+                              ? "text-amber-400 drop-shadow-glow"
+                              : "text-emerald-400 group-hover:scale-110"
+                          }
+                        `}
+                      >
+                        {waqt.icon}
+                      </span>
+                      <h2
+                        className={`
+                          font-bold
+                          ${
+                            isJummah
+                              ? "text-3xl text-amber-100 drop-shadow-lg"
+                              : "text-2xl text-white"
+                          }
+                        `}
+                      >
+                        {waqt.name}
+                      </h2>
+                    </div>
+
+                    <div
+                      className={`space-y-2 ${
+                        isJummah
+                          ? "text-amber-100 text-center"
+                          : "text-white/90"
                       }`}
                     >
-                      End:
-                    </span>
-                    <span className="font-mono font-semibold">{waqt.end}</span>
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+                      <p className="flex justify-between text-sm lg:text-base">
+                        <span
+                          className={`font-medium ${
+                            isJummah ? "text-amber-200" : "text-white/70"
+                          }`}
+                        >
+                          Start:
+                        </span>
+                        <span className="font-mono font-semibold">
+                          {waqt.start}
+                        </span>
+                      </p>
+                      <p className="flex justify-between text-sm lg:text-base">
+                        <span
+                          className={`font-medium ${
+                            isJummah ? "text-amber-200" : "text-white/70"
+                          }`}
+                        >
+                          End:
+                        </span>
+                        <span className="font-mono font-semibold">
+                          {waqt.end}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

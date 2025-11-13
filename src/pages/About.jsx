@@ -1,9 +1,10 @@
-import React from 'react';
+import ErrorPage from "../animation/Error";
+
 
 const About = () => {
     return (
         <div>
-            <p>this is about page</p>
+           <ErrorPage/>
         </div>
     );
 };

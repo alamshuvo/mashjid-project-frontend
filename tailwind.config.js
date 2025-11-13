@@ -15,7 +15,8 @@ export default {
         mainColor:"#0f382b",
         // mainColor:"#baa769",
         primaryButton:"#ffffff",
-        secondaryButton:"#a7c712"
+        secondaryButton:"#a7c712",
+        mainGold:'#baa769',
       },
       boxShadow: {
         'glow': '0 0 20px rgba(52, 211, 153, 0.5)',
