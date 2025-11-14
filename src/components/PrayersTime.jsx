@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Clock, Sun, Moon, CloudSun, CloudMoon, Sunrise } from "lucide-react";
+import { Clock, Sun, Moon, CloudSun, CloudMoon, Sunrise, Sunset, Users } from "lucide-react";
 import AnimatedHeading from "../animation/AnimatedHeading";
 import Divider from "../animation/Divider";
 import LogoLoader from "../animation/Loader";
 import ErrorPage from "../animation/Error";
+import { format } from 'date-fns'; // ← Only format is needed
 
 const islamicQuotes = [
   {
@@ -85,34 +86,66 @@ const WaqtTimings = () => {
       </div>
     );
 
+  // Helper: Convert "14:30" string to formatted time (e.g., "2:30 PM")
+  const formatPrayerTime = (timeStr) => {
+    if (!timeStr || timeStr === "0000" || !timeStr.includes(":")) return "--";
+
+    try {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      const date = new Date();
+      date.setHours(hours);
+      date.setMinutes(minutes);
+      date.setSeconds(0);
+      return format(date, "h:mm a"); // e.g., "5:17 AM"
+    } catch {
+      return timeStr;
+    }
+  };
+
+  // Your waqtList – now properly formatted
   const waqtList = [
     {
       name: "Fajr",
-      start: timings.Fajr,
-      end: timings.Sunrise,
-      icon: <CloudMoon />,
+      start: formatPrayerTime(timings.Fajr),
+      end: formatPrayerTime(timings.Sunrise),
+      icon: <CloudMoon className="w-6 h-6" />,
     },
-    { name: "Sunrise", start: timings.Sunrise, end: "0000", icon: <Sunrise /> },
-    { name: "Dhuhr", start: timings.Dhuhr, end: timings.Asr, icon: <Sun /> },
+    {
+      name: "Sunrise",
+      start: formatPrayerTime(timings.Sunrise),
+      end: "00:00",
+      icon: <Sunrise className="w-6 h-6" />,
+    },
+    {
+      name: "Dhuhr",
+      start: formatPrayerTime(timings.Dhuhr),
+      end: formatPrayerTime(timings.Asr),
+      icon: <Sun className="w-6 h-6" />,
+    },
     {
       name: "Asr",
-      start: timings.Asr,
-      end: timings.Maghrib,
-      icon: <CloudSun />,
+      start: formatPrayerTime(timings.Asr),
+      end: formatPrayerTime(timings.Maghrib),
+      icon: <CloudSun className="w-6 h-6" />,
     },
     {
       name: "Maghrib",
-      start: timings.Maghrib,
-      end: timings.Isha,
-      icon: <Moon />,
+      start: formatPrayerTime(timings.Maghrib),
+      end: formatPrayerTime(timings.Isha),
+      icon: <Sunset className="w-6 h-6" />,
     },
     {
       name: "Isha",
-      start: timings.Isha,
-      end: timings.Midnight || "23:59",
-      icon: <Clock />,
+      start: formatPrayerTime(timings.Isha),
+      end: formatPrayerTime(timings.Midnight || "12:00 AM"),
+      icon: <Moon className="w-6 h-6" />,
     },
-    { name: "jumuah", start: "1.00 pm", end: "2.00 pm" },
+    {
+      name: "Jumu'ah",
+      start: "1:00 PM",
+      end: "2:00 PM",
+      icon: <Users className="w-6 h-6" />,
+    },
   ];
 
   return (
@@ -243,18 +276,20 @@ const WaqtTimings = () => {
                           {waqt.start}
                         </span>
                       </p>
-                      <p className="flex justify-between text-sm lg:text-base">
-                        <span
-                          className={`font-medium ${
-                            isJummah ? "text-amber-200" : "text-white/70"
-                          }`}
-                        >
-                          End:
-                        </span>
-                        <span className="font-mono font-semibold">
-                          {waqt.end}
-                        </span>
-                      </p>
+                      {waqt.end !== null && (
+                        <p className="flex justify-between text-sm lg:text-base">
+                          <span
+                            className={`font-medium ${
+                              isJummah ? "text-amber-200" : "text-white/70"
+                            }`}
+                          >
+                            End:
+                          </span>
+                          <span className="font-mono font-semibold">
+                            {waqt.end}
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </div>
                 );

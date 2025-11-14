@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import Button from "../utilsDesign/Button";
 import useLinkClasses from "../customHooks/UseLinkClasses";
 import logo from "../assets/logo.jpeg";
+
 const NavBar = ({ token, handleLogout }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +16,6 @@ const NavBar = ({ token, handleLogout }) => {
       <nav className="bg-mainColor text-black px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center">
         {/* ---- Logo + Hamburger (mobile) ---- */}
         <div className="flex flex-row items-center justify-between w-full sm:w-auto">
-          
           <Link
             to="/"
             className="flex items-center gap-3 group transition-all duration-300 hover:gap-4"
@@ -85,31 +85,14 @@ const NavBar = ({ token, handleLogout }) => {
 
         {/* ---- Right Section (Tasks / Logout / Donate) ---- */}
         <div className="hidden sm:flex items-center space-x-4">
-          {token && (
-            <Link
-              to="/"
-              className={
-                location.pathname === "/"
-                  ? "text-amber-300 underline"
-                  : "hover:underline text-white"
-              }
-            >
-              Tasks
-            </Link>
-          )}
 
-          {token ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded"
-            >
-              Logout
-            </button>
-          ) : (
-            <Link to="/login">
-              <Button text={"Donate Us"} />
-            </Link>
-          )}
+          <a
+            href="https://wa.me/19086555529?text=Hi%21%20I%20want%20to%20make%20a%20donation."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button text="Contact us for Donation" />
+          </a>
         </div>
       </nav>
 
