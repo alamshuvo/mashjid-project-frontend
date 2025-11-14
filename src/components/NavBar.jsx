@@ -143,13 +143,13 @@ const NavBar = ({ token, handleLogout }) => {
                 Logout
               </button>
             ) : (
-              <Link
-                to="/login"
-                onClick={() => setIsMenuOpen(false)}
-                className="block"
-              >
-                <Button text={"Donate Us"} />
-              </Link>
+              <a
+              href="https://wa.me/19086555529?text=Hi%21%20I%20want%20to%20make%20a%20donation."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button text="Contact us for Donation" />
+            </a>
             )}
           </div>
         </div>
