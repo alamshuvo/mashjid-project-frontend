@@ -190,9 +190,9 @@ const WaqtTimings = () => {
         </div>
 
         {/* ==== LEFT: Quote  |  RIGHT: Timings ==== */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
           {/* Quote – full height left side */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 font-roboto">
             <div className="bg-gradient-to-br from-[#baa769]/20 to-amber-600/10 backdrop-blur-xl rounded-2xl p-6 border border-amber-400/40 shadow-lg shadow-amber-400/20 h-full flex flex-col justify-center">
               <blockquote className="text-amber-100 italic text-lg leading-relaxed text-center mb-4">
                 {quote.text}

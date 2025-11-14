@@ -16,12 +16,12 @@ import { useLocation } from 'react-router-dom';
     
     // Classes for the inactive (hover) state:
     // Uses the 'after' pseudo-element for the animated underline
-    const inactiveClasses = "hover:text-black after:block after:scale-x-0 after:h-[2px] after:bg-black after:transition after:duration-300 after:hover:scale-x-100 after:absolute after:bottom-0 after:left-0 after:w-full";
+    const inactiveClasses = "hover:text-mainGold after:block after:scale-x-0 after:h-[2px] after:bg-white after:transition after:duration-300 after:hover:scale-x-100 after:absolute after:bottom-0 after:left-0 after:w-full";
     
     // Classes for the active state
-    const activeClasses = "text-black border-b-2 border-black"; 
+    const activeClasses = "text-mainGold border-b-2 border-white"; 
     
-    // 3. Return the correct class string
+    // 3. Return the correct class stringz
     if (location.pathname === path) {
       return `${baseClasses} ${activeClasses}`;
     } else {

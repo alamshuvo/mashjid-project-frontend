@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 
 const MainLayout = () => {
@@ -28,11 +29,7 @@ const MainLayout = () => {
         <Outlet context={{ token }} />
       </main>
 
-      <footer>
-        <div className="bg-[#eff6ff] text-black text-center p-4">
-          &copy; {new Date().getFullYear()} TaskTracker. All rights reserved.
-        </div>
-      </footer>
+     <Footer/>
     </>
   );
 };
