@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Clock, Sun, Moon, CloudSun, CloudMoon, Sunrise, Sunset, Users } from "lucide-react";
+import {  Sun, Moon, CloudSun, CloudMoon, Sunrise, Sunset, Users } from "lucide-react";
 import AnimatedHeading from "../animation/AnimatedHeading";
 import Divider from "../animation/Divider";
 import LogoLoader from "../animation/Loader";

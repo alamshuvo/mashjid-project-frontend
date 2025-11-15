@@ -3,9 +3,20 @@ import Button from "../utilsDesign/Button";
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-mainColor via-mainGold to-mainColor text-white border-t border-amber-500/20 relative ">
+    <footer className="mt-5"
+    style={{
+      backgroundImage: `
+      linear-gradient(to bottom right, rgba(15, 23, 42, 0.10)),
+      url('https://icliny.org/wp-content/uploads/2017/07/bg-18.jpg?id=1200')
+    `
+        .replace(/\s+/g, " ")
+        .trim(),
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+    }}>
       {/* Subtle golden glow at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#baa769] to-transparent" />
+      <div className="" />
 
       <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
