@@ -1,12 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import {  Sun, Moon, CloudSun, CloudMoon, Sunrise, Sunset, Users } from "lucide-react";
+import {
+  Sun,
+  Moon,
+  CloudSun,
+  CloudMoon,
+  Sunrise,
+  Sunset,
+  Users,
+} from "lucide-react";
+import { motion } from "framer-motion";               // <-- NEW
 import AnimatedHeading from "../animation/AnimatedHeading";
 import Divider from "../animation/Divider";
 import LogoLoader from "../animation/Loader";
 import ErrorPage from "../animation/Error";
-import { format } from 'date-fns'; // ← Only format is needed
+import { format } from "date-fns";
 
+/* ──────────────────────  QUOTES  ────────────────────── */
 const islamicQuotes = [
   {
     text: "The best among you are those who have the best manners and character.",
@@ -42,6 +52,25 @@ const islamicQuotes = [
   },
 ];
 
+/* ──────────────────────  VARIANTS  ────────────────────── */
+const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+  },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
 const WaqtTimings = () => {
   const [timings, setTimings] = useState(null);
   const [dataDate, setDataDate] = useState(null);
@@ -49,7 +78,7 @@ const WaqtTimings = () => {
   const [error, setError] = useState("");
   const [quote, setQuote] = useState(islamicQuotes[0]);
 
-  /* ---------- Fetch timings ---------- */
+  /* ---------- FETCH TIMINGS ---------- */
   useEffect(() => {
     const fetchTimings = async () => {
       try {
@@ -68,7 +97,7 @@ const WaqtTimings = () => {
     fetchTimings();
   }, []);
 
-  /* ---------- Rotate quote ---------- */
+  /* ---------- ROTATE QUOTE ---------- */
   useEffect(() => {
     const interval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * islamicQuotes.length);
@@ -78,31 +107,28 @@ const WaqtTimings = () => {
   }, []);
 
   if (loading) return <LogoLoader />;
-
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600 text-lg">
-        <ErrorPage message={error}/>
+        <ErrorPage message={error} />
       </div>
     );
 
-  // Helper: Convert "14:30" string to formatted time (e.g., "2:30 PM")
+  /* ---------- TIME FORMATTER ---------- */
   const formatPrayerTime = (timeStr) => {
     if (!timeStr || timeStr === "0000" || !timeStr.includes(":")) return "--";
-
     try {
-      const [hours, minutes] = timeStr.split(":").map(Number);
-      const date = new Date();
-      date.setHours(hours);
-      date.setMinutes(minutes);
-      date.setSeconds(0);
-      return format(date, "h:mm a"); // e.g., "5:17 AM"
+      const [h, m] = timeStr.split(":").map(Number);
+      const d = new Date();
+      d.setHours(h);
+      d.setMinutes(m);
+      d.setSeconds(0);
+      return format(d, "h:mm a");
     } catch {
       return timeStr;
     }
   };
 
-  // Your waqtList – now properly formatted
   const waqtList = [
     {
       name: "Fajr",
@@ -151,26 +177,49 @@ const WaqtTimings = () => {
   return (
     <section className="min-h-screen font-alumni flex flex-col py-10 px-4 relative overflow-hidden">
       {/* Subtle overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+        className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"
+      />
 
       <div className="w-full max-w-7xl mx-auto space-y-10 z-10">
-        {/* Header Card */}
-        <div className="bg-white/10 backdrop-blur-lg border font-roboto border-white/20 rounded-3xl shadow-2xl p-8">
+        {/* ── Header Card ── */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="bg-white/10 backdrop-blur-lg border font-roboto border-white/20 rounded-3xl shadow-2xl p-8"
+        >
           <div className="text-center space-y-6">
             <AnimatedHeading />
 
             {/* Date Info Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm md:text-base">
-              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-5 border border-white/30">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm md:text-base"
+            >
+              <motion.div
+                variants={scaleIn}
+                className="bg-white/20 backdrop-blur-md rounded-2xl p-5 border border-white/30"
+              >
                 <p className="text-white/80 font-poppins font-medium text-lg">
                   Gregorian
                 </p>
                 <p className="text-white font-bold text-xl mt-1">
                   {dataDate?.readable || "Loading..."}
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="bg-mainColor to-yellow-600/20 backdrop-blur-xl rounded-2xl p-5 border border-amber-400/50 shadow-amber-400/40">
+              <motion.div
+                variants={scaleIn}
+                className="bg-mainColor to-yellow-600/20 backdrop-blur-xl rounded-2xl p-5 border border-amber-400/50 shadow-amber-400/40"
+              >
                 <p className="text-white font-poppins font-medium text-lg">
                   Hijri
                 </p>
@@ -180,32 +229,63 @@ const WaqtTimings = () => {
                 <p className="text-white text-sm mt-1">
                   {dataDate?.hijri.year} AH
                 </p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             <div className="flex justify-center">
               <Divider />
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* ==== LEFT: Quote  |  RIGHT: Timings ==== */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
+        {/* ── LEFT: Quote | RIGHT: Timings ── */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        >
           {/* Quote – full height left side */}
-          <div className="lg:col-span-1 font-roboto">
-            <div className="bg-gradient-to-br from-[#baa769]/20 to-amber-600/10 backdrop-blur-xl rounded-2xl p-6 border border-amber-400/40 shadow-lg shadow-amber-400/20 h-full flex flex-col justify-center">
-              <blockquote className="text-amber-100 italic text-lg leading-relaxed text-center mb-4">
+          <motion.div
+            variants={fadeUp}
+            className="lg:col-span-1 font-roboto"
+          >
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-[#baa769]/20 to-amber-600/10 backdrop-blur-xl rounded-2xl p-6 border border-amber-400/40 shadow-lg shadow-amber-400/20 h-full flex flex-col justify-center"
+            >
+              <motion.blockquote
+                key={quote.text}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5 }}
+                className="text-amber-100 italic text-lg leading-relaxed text-center mb-4"
+              >
                 {quote.text}
-              </blockquote>
-              <footer className="text-amber-200 text-sm font-medium text-center">
+              </motion.blockquote>
+              <motion.footer
+                key={quote.author}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-amber-200 text-sm font-medium text-center"
+              >
                 — {quote.author}
-              </footer>
-            </div>
-          </div>
+              </motion.footer>
+            </motion.div>
+          </motion.div>
 
           {/* Timings – right side */}
           <div className="lg:col-span-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
               {waqtList.map((waqt) => {
                 const isJummah =
                   waqt.name.toLowerCase() === "jumu'ah" ||
@@ -214,8 +294,10 @@ const WaqtTimings = () => {
                 const isSunrise = waqt.name.toLowerCase() === "sunrise";
 
                 return (
-                  <div
+                  <motion.div
                     key={waqt.name}
+                    variants={scaleIn}
+                    whileHover={{ y: -6, scale: 1.04 }}
                     className={`
                       ${
                         isJummah || isSunrise
@@ -223,7 +305,7 @@ const WaqtTimings = () => {
                           : "bg-white/15 backdrop-blur-lg border-white/20 hover:bg-white/25"
                       }
                       rounded-2xl p-6 lg:p-8 border shadow-lg hover:shadow-2xl
-                      transition-all duration-500 transform hover:-translate-y-1
+                      transition-all duration-500 transform
                     `}
                   >
                     <div
@@ -231,18 +313,20 @@ const WaqtTimings = () => {
                         isJummah ? "mb-5 justify-center" : "mb-4"
                       }`}
                     >
-                      <span
+                      <motion.span
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
                         className={`
-                          text-2xl transition-transform duration-300
+                          text-2xl
                           ${
                             isJummah
                               ? "text-amber-400 drop-shadow-glow"
-                              : "text-emerald-400 group-hover:scale-110"
+                              : "text-emerald-400"
                           }
                         `}
                       >
                         {waqt.icon}
-                      </span>
+                      </motion.span>
                       <h2
                         className={`
                           font-bold
@@ -259,9 +343,7 @@ const WaqtTimings = () => {
 
                     <div
                       className={`space-y-2 ${
-                        isJummah
-                          ? "text-amber-100 text-center"
-                          : "text-white/90"
+                        isJummah ? "text-amber-100 text-center" : "text-white/90"
                       }`}
                     >
                       <p className="flex justify-between text-sm lg:text-base">
@@ -291,12 +373,12 @@ const WaqtTimings = () => {
                         </p>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

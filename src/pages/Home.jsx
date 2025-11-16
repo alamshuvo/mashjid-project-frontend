@@ -3,11 +3,11 @@ import WaqtTimings from "../components/PrayersTime";
 
 import bgImage from "../assets/ffff.webp";
 import Hero from "../components/Hero";
+import AnnouncementSection from "../components/Announcements";
 
 const Home = () => {
   return (
     <div>
-     
       <div
         style={{
           backgroundImage: `
@@ -23,9 +23,12 @@ const Home = () => {
       >
         <WaqtTimings />
       </div>
-    <div className="mt-10">
-    <Hero />
-    </div>
+      <div className="mt-10">
+        <Hero />
+      </div>
+      <div className="mt-10">
+        <AnnouncementSection/>
+      </div>
     </div>
   );
 };
